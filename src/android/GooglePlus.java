@@ -336,6 +336,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
             //Return the status code to be handled client side
             savedCallbackContext.error(signInResult.getStatus().getStatusCode());
         } else {
+            Log.i(TAG, "Signing in success");
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
@@ -399,14 +400,18 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     }
 
     private JSONObject getAuthToken(Activity activity, Account account, boolean retry) throws Exception {
+        Log.i(TAG, "Getting Auth Token");
         AccountManager manager = AccountManager.get(activity);
         AccountManagerFuture<Bundle> future = manager.getAuthToken(account, "oauth2:profile email", null, activity, null, null);
         Bundle bundle = future.getResult();
         String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+        Log.i(TAG, "Auth Token Generated" + authToken);
         try {
             return verifyToken(authToken);
         } catch (IOException e) {
             if (retry) {
+                Log.i(TAG, "Retrying to verify token");
+                Log.i(TAG, e.getLocalizedMessage());
                 manager.invalidateAuthToken("com.google", authToken);
                 return getAuthToken(activity, account, false);
             } else {
@@ -417,6 +422,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
 
     private JSONObject verifyToken(String authToken) throws IOException, JSONException {
         URL url = new URL(VERIFY_TOKEN_URL+authToken);
+        Log.i(TAG, "Verifying URL " + VERIFY_TOKEN_URL+authToken);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setInstanceFollowRedirects(true);
         String stringResponse = fromStream(
