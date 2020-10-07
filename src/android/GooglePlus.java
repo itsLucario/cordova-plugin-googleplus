@@ -424,7 +424,10 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
         URL url = new URL(VERIFY_TOKEN_URL+authToken);
         Log.i(TAG, "Verifying URL " + VERIFY_TOKEN_URL+authToken);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setInstanceFollowRedirects(false);
+        urlConnection.setInstanceFollowRedirects(true);
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setDoOutput(true);
+        Log.i(TAG, "Setup Done");
         String stringResponse = fromStream(
             new BufferedInputStream(urlConnection.getInputStream())
         );
