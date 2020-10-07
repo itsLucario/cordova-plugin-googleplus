@@ -438,7 +438,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
             "access_type": "offline"
         }*/
 
-        Log.d("AuthenticatedBackend", "token: " + authToken + ", verification: " + stringResponse);
+        Log.i("AuthenticatedBackend", "token: " + authToken + ", verification: " + stringResponse);
         JSONObject jsonResponse = new JSONObject(
             stringResponse
         );
@@ -452,6 +452,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     }
 
     public static String fromStream(InputStream is) throws IOException {
+        Log.i(TAG, "Buffer In");
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line = null;
@@ -459,6 +460,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
             sb.append(line).append("\n");
         }
         reader.close();
+        Log.i(TAG, "Buffer Out");
         return sb.toString();
     }
 }
